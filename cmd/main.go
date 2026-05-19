@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"todos/modules/todos"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -18,10 +18,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c fiber.Ctx) error {
-		fmt.Printf("what is happening!!")
-		return c.SendString("Hello, World!")
-	})
+	app.Get("/", todos.CreateTodo)
 
 	app.Listen(":3000")
 }
