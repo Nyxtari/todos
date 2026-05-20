@@ -2,6 +2,14 @@ package todos
 
 import "github.com/gofiber/fiber/v3"
 
+/*
+	TODO:
+
+	- [ ] Needs some kind of connection to database
+	- [ ] Needs to grab things from the request
+	- [ ] Needs to implement the basic CRUD
+*/
+
 func CreateTodoService(c fiber.Ctx) (Todo, error) {
 	return Todo{
 		Title: "example",

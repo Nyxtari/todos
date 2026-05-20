@@ -9,8 +9,9 @@ import (
 /*
 	TODO:
 	- [ ] Create config for server that "reads" env variables
-	- [ ] Create endpoints for todos - CRUD
-	- [ ] Create module of TODO
+	- [X] Create endpoints for todos - CRUD
+	- [X] Create module of TODO
+	- [ ] Create Services for the TODO
 	- [ ] Link to postgres
 	- [ ] Create tests
 */
