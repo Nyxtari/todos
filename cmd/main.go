@@ -18,7 +18,11 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", todos.CreateTodo)
+	app.Post("/todos", todos.CreateTodo)
+	app.Get("/todos/:id", todos.GetTodo)
+	app.Get("/todos", todos.GetTodos)
+	app.Put("/todos/:id", todos.UpdateTodo)
+	app.Delete("/todos/:id", todos.DeleteTodo)
 
 	app.Listen(":3000")
 }
