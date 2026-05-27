@@ -9,7 +9,7 @@ import (
 
 func getUsersRepository(conn *pgx.Conn) ([]User, error) {
 	query := `
-        SELECT id, name, email FROM "User"
+        SELECT id, name, email FROM app.users
     `
 	rows, err := conn.Query(context.Background(), query)
 	if err != nil {
