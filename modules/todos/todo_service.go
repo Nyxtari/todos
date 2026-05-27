@@ -1,6 +1,9 @@
 package todos
 
-import "github.com/gofiber/fiber/v3"
+import (
+	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5"
+)
 
 /*
 	TODO:
@@ -20,8 +23,8 @@ func GetTodoService(c fiber.Ctx) (Todo, error) {
 	return Todo{}, nil
 }
 
-func GetTodosService(c fiber.Ctx) ([]Todo, error) {
-	return []Todo{}, nil
+func GetTodosService(c fiber.Ctx, conn *pgx.Conn) ([]Todo, error) {
+	return getTodosRepository(conn)
 }
 
 func UpdateTodoService(c fiber.Ctx) (int32, error) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5"
 )
 
 func CreateTodo(c fiber.Ctx) error {
@@ -28,15 +29,18 @@ func GetTodo(c fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(todo)
 }
 
-func GetTodos(c fiber.Ctx) error {
-	todos, err := GetTodosService(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+func GetTodos(conn *pgx.Conn) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		todos, err := GetTodosService(c, conn)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(todos)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(todos)
 }
 
 func UpdateTodo(c fiber.Ctx) error {

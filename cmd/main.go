@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"todos/config"
 	"todos/modules/todos"
 	"todos/modules/user"
@@ -25,13 +26,14 @@ func main() {
 	err := godotenv.Load()
 	conn, err := config.Connect()
 	if err != nil {
+		fmt.Println("PROBLEM CONNECTING :: " + err.Error())
 		return
 	}
 	app := fiber.New()
 
 	app.Post("/todos", todos.CreateTodo)
 	app.Get("/todos/:id", todos.GetTodo)
-	app.Get("/todos", todos.GetTodos)
+	app.Get("/todos", todos.GetTodos(conn))
 	app.Put("/todos/:id", todos.UpdateTodo)
 	app.Delete("/todos/:id", todos.DeleteTodo)
 

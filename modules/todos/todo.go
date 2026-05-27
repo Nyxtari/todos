@@ -3,6 +3,7 @@ package todos
 import "time"
 
 type Todo struct {
+	Id          int32     `json:"id"`
 	IsDone      bool      `json:"isDone"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
