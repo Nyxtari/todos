@@ -1,6 +1,10 @@
 package todos
 
 import (
+	"errors"
+	"log"
+	"strconv"
+
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5"
 )
@@ -13,24 +17,54 @@ import (
 	- [ ] Needs to implement the basic CRUD
 */
 
-func CreateTodoService(c fiber.Ctx) (Todo, error) {
-	return Todo{
-		Title: "example",
-	}, nil
+func CreateTodoService(c fiber.Ctx, conn *pgx.Conn) (Todo, error) {
+
+	if !c.HasBody() {
+		return Todo{}, errors.New("no body has been sent")
+	}
+
+	todo := new(Todo)
+
+	if err := c.Bind().Body(todo); err != nil {
+		return Todo{}, err
+	}
+
+	return createTodoRepository(conn, *todo)
 }
 
-func GetTodoService(c fiber.Ctx) (Todo, error) {
-	return Todo{}, nil
+func GetTodoService(c fiber.Ctx, conn *pgx.Conn) (Todo, error) {
+
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		log.Fatal("failed to convert string to integer", err)
+	}
+
+	return getTodoRepository(conn, id)
 }
 
 func GetTodosService(c fiber.Ctx, conn *pgx.Conn) ([]Todo, error) {
 	return getTodosRepository(conn)
 }
 
-func UpdateTodoService(c fiber.Ctx) (int32, error) {
-	return 1, nil
+func UpdateTodoService(c fiber.Ctx, conn *pgx.Conn) (Todo, error) {
+	if !c.HasBody() {
+		return Todo{}, errors.New("no body has been sent")
+	}
+
+	todo := new(Todo)
+
+	if err := c.Bind().Body(todo); err != nil {
+		return Todo{}, err
+	}
+
+	return updateTodoRepository(conn, *todo)
 }
 
-func DeleteTodoService(c fiber.Ctx) (int32, error) {
-	return 1, nil
+func DeleteTodoService(c fiber.Ctx, conn *pgx.Conn) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		log.Fatal("failed to convert string to integer", err)
+	}
+
+	return deleteTodoRepository(conn, id)
 }

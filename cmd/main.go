@@ -13,10 +13,10 @@ import (
 
 /*
 	TODO:
-	- [ ] Create config for server that "reads" env variables
+	- [X] Create config for server that "reads" env variables
 	- [X] Create endpoints for todos - CRUD
 	- [X] Create module of TODO
-	- [ ] Create Services for the TODO
+	- [X] Create Services for the TODO
 	- [X] Link to postgres
 		- This is using prisma, in future use my own db please
 	- [ ] Create tests
@@ -31,11 +31,11 @@ func main() {
 	}
 	app := fiber.New()
 
-	app.Post("/todos", todos.CreateTodo)
-	app.Get("/todos/:id", todos.GetTodo)
+	app.Post("/todos", todos.CreateTodo(conn))
+	app.Get("/todo/:id", todos.GetTodo(conn))
 	app.Get("/todos", todos.GetTodos(conn))
-	app.Put("/todos/:id", todos.UpdateTodo)
-	app.Delete("/todos/:id", todos.DeleteTodo)
+	app.Put("/todos", todos.UpdateTodo(conn))
+	app.Delete("/todos/:id", todos.DeleteTodo(conn))
 
 	app.Get("users", user.GetUsers(conn))
 

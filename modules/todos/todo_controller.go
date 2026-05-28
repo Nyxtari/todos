@@ -1,32 +1,34 @@
 package todos
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5"
 )
 
-func CreateTodo(c fiber.Ctx) error {
-	todo, err := CreateTodoService(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
+func CreateTodo(conn *pgx.Conn) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		todo, err := CreateTodoService(c, conn)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
 
-	return c.Status(fiber.StatusCreated).JSON(todo)
+		return c.Status(fiber.StatusOK).JSON(todo)
+	}
 }
 
-func GetTodo(c fiber.Ctx) error {
-	todo, err := GetTodoService(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
+func GetTodo(conn *pgx.Conn) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		todo, err := GetTodoService(c, conn)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
 
-	return c.Status(fiber.StatusOK).JSON(todo)
+		return c.Status(fiber.StatusOK).JSON(todo)
+	}
 }
 
 func GetTodos(conn *pgx.Conn) fiber.Handler {
@@ -40,27 +42,30 @@ func GetTodos(conn *pgx.Conn) fiber.Handler {
 
 		return c.Status(fiber.StatusOK).JSON(todos)
 	}
-
 }
 
-func UpdateTodo(c fiber.Ctx) error {
-	id, err := UpdateTodoService(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
+func UpdateTodo(conn *pgx.Conn) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		todo, err := UpdateTodoService(c, conn)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
 
-	return c.Status(fiber.StatusOK).JSON(fmt.Sprintf("Todo with id %d was correctly updated", id))
+		return c.Status(fiber.StatusOK).JSON(todo)
+	}
 }
 
-func DeleteTodo(c fiber.Ctx) error {
-	id, err := DeleteTodoService(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
+func DeleteTodo(conn *pgx.Conn) fiber.Handler {
+	return func(c fiber.Ctx) error {
+		err := DeleteTodoService(c, conn)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
 
-	return c.Status(fiber.StatusOK).JSON(fmt.Sprintf("Todo with id %d was correctly updated", id))
+		return c.Status(fiber.StatusOK).JSON("Deleted Todo")
+	}
 }
